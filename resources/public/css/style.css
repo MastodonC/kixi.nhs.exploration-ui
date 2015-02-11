@@ -1,0 +1,26 @@
+.header {
+    height: 165px;
+    color: white;
+    background-color: #0065B7;
+    border-bottom: 0;
+}
+
+.exploration-ui {
+    padding-top: 165px;
+}
+
+.header-text {
+    padding-top: 1em;
+    padding-bottom: 1em;
+    height: 60px;
+    font-family: Helvetica Neue;
+    font-weight: 400;
+}
+
+.side-menu {
+    border-top: 0;
+    position: fixed;
+    width: 300px;
+    height: 100%;
+    border-right: 1px solid #e7e7e7;
+}
