@@ -1,4 +1,4 @@
-(defproject kixi.nhs.exploration-ui "0.1.0-SNAPSHOT"
+(defproject kixi/nhs.exploration-ui "0.1.0-SNAPSHOT"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
@@ -16,7 +16,8 @@
                  [enlive "1.1.5"]
                  [org.omcljs/om "0.8.8"]
                  [sablono "0.3.1"]
-                 [environ "1.0.0"]]
+                 [environ "1.0.0"]
+                 [kixi/charts "0.1.1-SNAPSHOT"]]
 
   :plugins [[lein-cljsbuild "1.0.3"]
             [lein-environ "1.0.0"]]
