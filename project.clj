@@ -10,14 +10,19 @@
 
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/clojurescript "0.0-2496" :scope "provided"]
+                 [org.clojure/core.async "0.1.346.0-17112a-alpha"]
+
                  [ring "1.3.2"]
                  [ring/ring-defaults "0.1.2"]
                  [compojure "1.3.1"]
                  [enlive "1.1.5"]
+                 [environ "1.0.0"]
+
+                 ;; cljs
                  [org.omcljs/om "0.8.8"]
                  [sablono "0.3.1"]
-                 [environ "1.0.0"]
-                 [kixi/charts "0.1.1-SNAPSHOT"]]
+                 [kixi/charts "0.1.0-SNAPSHOT"]
+                 [cljs-ajax "0.3.10"]]
 
   :plugins [[lein-cljsbuild "1.0.3"]
             [lein-environ "1.0.0"]]
@@ -25,6 +30,8 @@
   :min-lein-version "2.5.0"
 
   :uberjar-name "kixi.nhs.exploration-ui.jar"
+
+  :clean-targets ^{:protect false} ["target" "resources/public/js"]
 
   :cljsbuild {:builds {:app {:source-paths ["src/cljs"]
                              :compiler {:output-to     "resources/public/js/app.js"
