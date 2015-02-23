@@ -41,3 +41,8 @@
   stroke: steelblue;
   stroke-width: 1.5px;
 }
+
+.table-borderless td,
+.table-borderless th {
+    border: 0;
+}

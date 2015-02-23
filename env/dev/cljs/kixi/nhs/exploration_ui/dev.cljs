@@ -1,5 +1,5 @@
 (ns kixi.nhs.exploration-ui.dev
-  (:require [kixi.nhs.exploration-ui.core :as core]
+  (:require [kixi.nhs.exploration-ui.ui :as ui]
             [figwheel.client :as figwheel :include-macros true]
             [cljs.core.async :refer [put!]]
             [weasel.repl :as weasel]))
@@ -9,8 +9,8 @@
 (figwheel/watch-and-reload
   :websocket-url "ws://localhost:3449/figwheel-ws"
   :jsload-callback (fn []
-                     (core/main)))
+                     (ui/main)))
 
 (weasel/connect "ws://localhost:9001" :verbose true :print #{:repl :console})
 
-(core/main)
+(ui/main)

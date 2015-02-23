@@ -1,4 +1,4 @@
 (ns kixi.nhs.exploration-ui.prod
-  (:require [kixi.nhs.exploration-ui.core :as core]))
+  (:require [kixi.nhs.exploration-ui.ui :as ui]))
 
-(core/main)
+(ui/main)
