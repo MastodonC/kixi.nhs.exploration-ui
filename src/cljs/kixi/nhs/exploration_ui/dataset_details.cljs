@@ -87,7 +87,8 @@
   (om/set-state! owner :y_axis (conj (om/get-state owner :y_axis) {:field-name header})))
 
 (defn on-change [owner header e]
-  (let [v (.-value (aget (.-options (.-target e)) (.-selectedIndex (.-options (.-target e)))))]
+  (let [options (.-options (.-target e))
+        v       (.-value (aget options (.-selectedIndex options)))]
     (om/set-state! owner :error {})
     (validate-selection owner header (data/scrub-keyword v))))
 

@@ -4,14 +4,18 @@
             [clojure.walk :as walk]
             [clojure.string :as str]))
 
+;; TODO replace with a proper date parser
 (defn date-parser [date]
   (let [date-str (-> date (.match #"\d{4}"))]
     (new js/Date date-str)))
 
+(defn ckan-host []
+  "http://54.154.11.196/api/3/action/")
+
 (defn get-url
   "Build url string by joining site url with params."
   [& api-method]
-  (let [hostname "http://54.154.11.196/api/3/action/"]
+  (let [hostname (ckan-host)]
     (apply str hostname api-method)))
 
 (defn get-all-datasets [k cursor]
@@ -22,7 +26,6 @@
                                             walk/keywordize-keys)))
         :headers {"Accept" "application/json"}
         :response-format :json}))
-
 
 (defn str-vals->num-vals [data]
   (map #(-> %
