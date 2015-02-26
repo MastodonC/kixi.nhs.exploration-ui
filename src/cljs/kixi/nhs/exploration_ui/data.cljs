@@ -4,11 +4,17 @@
             [clojure.walk :as walk]
             [clojure.string :as str]))
 
-(def parsers [#"\d{4}" #"\w* \d{4} to \w* \d{4}"])
+(def parsers [#"\d{4}" #"\w* \d{4} to \w* \d{4}" #"\w* - \w* \d{4}"
+              #"\d{4}-\d{2}"])
 
 (def months
   ["January" "February" "March" "April" "May" "June" "July" "August"
    "September" "October" "November" "December"])
+
+
+;; Oct - Dec 2013
+;; 1/4/2013 to 31/3/2014
+;; 2013-14
 
 (defn index-of [coll x]
   (first (keep-indexed #(when (= %2 x) %1) coll)))
@@ -24,6 +30,17 @@
                            "01" ;; default day
                            )]
     (new js/Date start-date)))
+
+(defmethod s->timestamps "\\d{4}" [s pattern]
+  (new js/Date s))
+
+(defmethod s->timestamps "\\w* - \\w* \\d{4}" [s pattern]
+  ;;(new js/Date s)
+  )
+
+(defmethod s->timestamps "\\d{4}-\\d{2}" [s pattern]
+  (let [start-str (str/trim (first (.match s #"\d{4}")))]
+    (new js/Date start-str)))
 
 (defn parse [parser s]
   (let [date-str (.match s parser)]
@@ -62,9 +79,10 @@
 
 (defn scrub-data [fields data]
   (println "scrubbing data")
-  (map #(-> %
-            (scrub-numerical-vals (:y fields))
-            (scrub-dates (:x fields))) data))
+  (keep #(when-not (nil? (get % (:x fields)))
+           (-> %
+               (scrub-numerical-vals (:y fields))
+               (scrub-dates (:x fields)))) data))
 
 (defn scrub-keyword [k]
   (-> k
