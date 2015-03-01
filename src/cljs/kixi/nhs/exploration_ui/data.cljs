@@ -4,41 +4,64 @@
             [clojure.walk :as walk]
             [clojure.string :as str]))
 
-(def parsers [#"\d{4}" #"\w* \d{4} to \w* \d{4}" #"\w* - \w* \d{4}"
-              #"\d{4}-\d{2}"])
+(def parsers [#"\d{4}"
+              #"\w* \d{4} to \w* \d{4}"
+              #"\w* - \w* \d{4}"
+              #"\d{4}\.\d"
+              #"\d{4}-\d{2}"
+              #"\d{4}/\d{2}"
+              #"\d{1,2}/\d{1,2}/\d{4} to \d{1,2}/\d{1,2}/\d{4}"])
 
 (def months
   ["January" "February" "March" "April" "May" "June" "July" "August"
    "September" "October" "November" "December"])
 
-
-;; Oct - Dec 2013
-;; 1/4/2013 to 31/3/2014
-;; 2013-14
+(def short-months
+  ["Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug"
+   "Sep" "Oct" "Nov" "Dec"])
 
 (defn index-of [coll x]
   (first (keep-indexed #(when (= %2 x) %1) coll)))
 
 (defmulti s->timestamps (fn [s pattern] pattern))
 
+;; January 2014 to February 2014
 (defmethod s->timestamps "\\w* \\d{4} to \\w* \\d{4}" [s pattern]
   (let [[start-str _] (str/split s #" to ")
-        start-date    (str (str/trim (first (.match start-str #"\d{4}"))) ;; year
-                           "/"
-                           (inc (index-of (str/trim (first (.match start-str #"\w*"))))) ;; month
-                           "/"
-                           "01" ;; default day
-                           )]
+        start-date    (str (str/trim (first (.match start-str #"\d{4}"))) "/"
+                           (inc (index-of months (str/trim (first (.match start-str #"\w*")))))
+                           "/" "01")]
     (new js/Date start-date)))
 
+;; 1/4/2013 to 31/3/2014
+(defmethod s->timestamps "\\d{1,2}\\/\\d{1,2}\\/\\d{4} to \\d{1,2}\\/\\d{1,2}\\/\\d{4}" [s pattern]
+  (let [[start-str _] (str/split s #" to ")
+        start-date    (str/trim (first (.match start-str #"\d{1,2}/\d{1,2}/\d{4}")))]
+    (new js/Date start-date)))
+
+;; Oct - Dec 2013
+(defmethod s->timestamps "\\w* - \\w* \\d{4}" [s pattern]
+  (let [[start-str end-str] (str/split s #" - ")
+        start-date          (str (str/trim (first (.match end-str #"\d{4}"))) "/"
+                                 (inc (index-of short-months (str/trim start-str)))
+                                 "/" "01")]
+    (new js/Date start-date)))
+
+;; 2004
 (defmethod s->timestamps "\\d{4}" [s pattern]
   (new js/Date s))
 
-(defmethod s->timestamps "\\w* - \\w* \\d{4}" [s pattern]
-  ;;(new js/Date s)
-  )
+;; 2004.0
+(defmethod s->timestamps "\\d{4}\\.\\d" [s pattern]
+  (new js/Date (str/trim (first (.match s #"\d{4}")))))
 
+;; 2013-14
 (defmethod s->timestamps "\\d{4}-\\d{2}" [s pattern]
+  (let [start-str (str/trim (first (.match s #"\d{4}")))]
+    (new js/Date start-str)))
+
+;; 2013/14
+(defmethod s->timestamps "\\d{4}\\/\\d{2}" [s pattern]
   (let [start-str (str/trim (first (.match s #"\d{4}")))]
     (new js/Date start-str)))
 
@@ -78,7 +101,6 @@
   (update-in m [field] js/parseInt))
 
 (defn scrub-data [fields data]
-  (println "scrubbing data")
   (keep #(when-not (nil? (get % (:x fields)))
            (-> %
                (scrub-numerical-vals (:y fields))
