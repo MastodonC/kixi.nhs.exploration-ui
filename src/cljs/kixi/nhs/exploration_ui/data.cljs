@@ -71,10 +71,10 @@
       (s->timestamps s (.-source parser)))))
 
 (defn parse-date [s]
-  (first (keep (fn [p]
-                 (let [d (parse p s)]
-                   (when-not (nil? d)
-                     d))) parsers)))
+  (some (fn [p]
+          (let [d (parse p s)]
+            (when-not (nil? d)
+              d))) parsers))
 
 (defn ckan-host []
   "http://54.154.11.196/api/3/action/")
