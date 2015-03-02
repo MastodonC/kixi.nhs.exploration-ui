@@ -4,9 +4,9 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
-  :source-paths ["src/clj"]
+  :source-paths ["src/clj" "src/cljs"]
 
-  :test-paths ["spec/clj"]
+  :test-paths ["test/clj" "test/cljs"]
 
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/clojurescript "0.0-2496" :scope "provided"]
@@ -40,7 +40,12 @@
                                         :preamble      ["react/react.min.js"]
                                         :externs       ["react/externs/react.js"]
                                         :optimizations :none
-                                        :pretty-print  true}}}}
+                                        :pretty-print  true}}
+                       :test {:source-paths ["src/cljs" "test/cljs"]
+                              :compiler {:output-to "target/testable.js"
+                                         :optimizations :whitespace
+                                         :pretty-print  true}}}
+              :test-commands {"test" ["phantomjs" "phantom/unit-test.js" "phantom/unit-test.html"]}}
 
   :profiles {:dev {:source-paths ["env/dev/clj"]
 

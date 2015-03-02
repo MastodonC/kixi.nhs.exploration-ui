@@ -41,7 +41,8 @@
   (reify
     om/IRender
     (render [_]
-      (let [{:keys [data fields]} cursor]
+      (let [{:keys [data fields]} cursor
+            _ (println "data: " (first data))]
         (html
          [:div.col-sm-9.col-sm-offset-3.main
           [:h3 "Chart"]
@@ -74,7 +75,8 @@
   (let [x-axis (-> value :x-axis :field-name keyword)
         y-axis (-> value :y-axis first :field-name keyword)] ;; TODO plot multiple line chart
     (om/update! cursor [:chart :fields] {:x-axis x-axis :y-axis y-axis})
-    (data/get-resource-data (-> @cursor :datasets :selected :preview :id) [:chart :data] cursor)))
+    (data/get-resource-data (-> @cursor :datasets :selected :preview :id) [:chart :data] cursor
+                            :fields {:x x-axis :y y-axis})))
 
 (defn exploration-ui [cursor owner]
   (reify

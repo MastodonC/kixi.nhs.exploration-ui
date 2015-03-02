@@ -25,28 +25,11 @@ When you see the line `Successfully compiled "resources/public/app.js"
 in 21.36 seconds.`, you're ready to go. Browse to
 `http://localhost:10555` and enjoy.
 
-**Attention: It is not longer needed to run `lein figwheel`
-  separately. This is now taken care of behind the scenes**
-
-## Trying it out
-
-If all is well you now have a browser window saying 'Hello Chestnut',
-and a REPL prompt that looks like `cljs.user=>`.
-
-Open `resources/public/css/style.css` and change some styling of the
-H1 element. Notice how it's updated instantly in the browser.
-
-Open `src/cljs/kixi.nhs.exploration-ui/core.cljs`, and change `dom/h1` to
-`dom/h2`. As soon as you save the file, your browser is updated.
-
-In the REPL, type
+## Testing
 
 ```
-(ns kixi.nhs.exploration-ui.core)
-(swap! app-state assoc :text "Interactivity FTW")
+lein cljsbuild test test
 ```
-
-Notice again how the browser updates.
 
 ## Deploying to Heroku
 
@@ -79,20 +62,10 @@ lein with-profile -dev,+production uberjar && foreman start
 Now your app is running at
 [http://localhost:5000](http://localhost:5000) in production mode.
 
-## Testing
-
-
-To autotest Clojure code using speclj:
-
-    lein spec -a
-
-To autotest Clojurescript code using specljs:
-
-    lein cljsbuild auto dev
 
 ## License
 
-Copyright © 2014 FIXME
+Copyright © 2014 Mastodon C
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
